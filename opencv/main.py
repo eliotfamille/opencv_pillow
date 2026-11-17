@@ -1,8 +1,23 @@
-import cv2 as cv
 import numpy as np
+import cv2 as cv
 
-print("OpenCV: ", cv.__version__)
-img = np.zeros((120, 400, 3), dtype = np.uint8)
-cv.putText(img, "OpenCV OK", (10, 80), cv.FONT_HERSHEY_SIMPLEX, 2, (255,255,255), 3)
+cap = cv.VideoCapture(1) # lis le capteur
+if not cap.isOpened():
+    print("impossible d'acceder a la camera")
+    exit()
 
-cv.imwrite("hello.png", img)
+while True:
+    ret, frame = cap.read() # prend chaque frame
+
+    if not ret:
+        print("ne recois pas d'image (stream end?). Exiting ...")
+        break
+
+    gray = cv.cvtColor(frame, cv.COLOR_BGR2BGRA)    # renvois l'image et le coleur
+    cv.imshow('frame', gray)
+
+    if cv.waitKey(1) == ord('q'):
+        break
+
+cap.release()
+cv.destroyAllWindows()
